@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: polls-deployment
+  labels:
+    app: polls
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: polls
+  template:
+    metadata:
+      labels:
+        app: polls
+    spec:
+      containers:
+      - name: polls
+        image: localhost:5000/polls
+        ports:
+        - containerPort: 8000
+        command: ["python3"]
+        args: ["manage.py","runserver","0.0.0.0:8000"]
+        volumeMounts:
+        - mountPath: /db
+          name: db-sqlite
+      volumes:
+      - name: db-sqlite
+        hostPath:
+          path: /c/cygwin64/home/krzys/devops-hiring/db
+          type: Directory
